@@ -22,14 +22,15 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    overflow:hidden;
+
     background:
     radial-gradient(circle at top left,#6a11cb,#2575fc);
+
+    overflow:hidden;
     position:relative;
 }
 
-/* Animated Background */
-
+/* Glow background */
 body::before,
 body::after{
     content:"";
@@ -37,9 +38,9 @@ body::after{
     width:500px;
     height:500px;
     border-radius:50%;
-    filter:blur(80px);
-    opacity:0.5;
-    animation:float 8s infinite ease-in-out alternate;
+    filter:blur(100px);
+    opacity:0.4;
+    animation:float 8s infinite alternate ease-in-out;
 }
 
 body::before{
@@ -55,230 +56,118 @@ body::after{
 }
 
 @keyframes float{
-    from{
-        transform:translateY(0px) translateX(0px);
-    }
-    to{
-        transform:translateY(40px) translateX(20px);
-    }
+    from{ transform:translate(0,0); }
+    to{ transform:translate(40px,40px); }
 }
 
-/* Login Card */
-
+/* Card */
 .card{
     width:90%;
-    max-width:430px;
-    padding:40px 35px;
+    max-width:420px;
+    padding:45px 32px;
+
     border-radius:28px;
 
     background:rgba(255,255,255,0.12);
-
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
 
     border:1px solid rgba(255,255,255,0.2);
 
-    box-shadow:
-    0 8px 32px rgba(0,0,0,0.25);
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+
+    text-align:center;
+    color:white;
 
     position:relative;
     z-index:10;
-
-    animation:fadeIn 1s ease;
 }
 
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(40px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0px);
-    }
-}
-
+/* Icon */
 .logo{
-    width:85px;
-    height:85px;
-    margin:auto;
-    margin-bottom:20px;
-
-    border-radius:50%;
-
-    background:linear-gradient(135deg,#00c6ff,#0072ff);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:38px;
-    color:white;
-
-    box-shadow:
-    0 10px 30px rgba(0,114,255,0.5);
+    font-size:44px;
+    margin-bottom:12px;
 }
 
+/* Title */
 h1{
-    color:white;
-    text-align:center;
     font-size:30px;
-    margin-bottom:8px;
-    font-weight:700;
+    margin-bottom:6px;
 }
 
+/* Subtitle */
 .subtitle{
-    text-align:center;
-    color:rgba(255,255,255,0.75);
-    margin-bottom:35px;
-    font-size:14px;
+    font-size:13px;
+    opacity:0.75;
+    margin-bottom:25px;
 }
 
-/* Inputs */
-
-.input-group{
-    margin-bottom:22px;
-}
-
-label{
-    display:block;
-    color:white;
-    margin-bottom:10px;
-    font-size:14px;
-    font-weight:500;
-}
-
-.input-box{
-    position:relative;
-}
-
+/* Input */
 input{
     width:100%;
-    padding:16px 18px;
+    padding:15px;
+
+    margin-top:10px;
+
+    border-radius:14px;
     border:none;
     outline:none;
 
-    border-radius:14px;
-
     background:rgba(255,255,255,0.12);
-
     color:white;
-    font-size:15px;
 
-    border:1px solid rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.2);
+
+    font-size:15px;
 
     transition:0.3s;
 }
 
 input::placeholder{
-    color:rgba(255,255,255,0.55);
+    color:rgba(255,255,255,0.6);
 }
 
 input:focus{
     border-color:#00d2ff;
-    box-shadow:
-    0 0 20px rgba(0,210,255,0.35);
+    box-shadow:0 0 18px rgba(0,210,255,0.35);
 }
 
 /* Button */
-
 button{
     width:100%;
-    padding:16px;
+    padding:15px;
+
+    margin-top:22px;
 
     border:none;
     border-radius:14px;
 
-    background:
-    linear-gradient(135deg,#00d2ff,#0072ff);
+    background:linear-gradient(135deg,#00d2ff,#0072ff);
 
     color:white;
-    font-size:16px;
     font-weight:600;
+    font-size:15px;
 
     cursor:pointer;
+
     transition:0.35s;
 
-    box-shadow:
-    0 8px 25px rgba(0,114,255,0.4);
+    box-shadow:0 8px 25px rgba(0,0,0,0.25);
 }
 
 button:hover{
-    transform:translateY(-2px) scale(1.01);
-
-    box-shadow:
-    0 15px 35px rgba(0,114,255,0.55);
-}
-
-button:active{
-    transform:scale(0.98);
+    transform:translateY(-2px) scale(1.02);
 }
 
 /* Result */
-
 #result{
-    margin-top:22px;
-    padding:16px;
-    border-radius:14px;
-
-    text-align:center;
-    font-weight:600;
+    margin-top:16px;
+    font-size:14px;
     display:none;
-
-    animation:pop 0.4s ease;
 }
 
-@keyframes pop{
-    from{
-        transform:scale(0.8);
-        opacity:0;
-    }
-    to{
-        transform:scale(1);
-        opacity:1;
-    }
-}
-
-.success{
-    background:rgba(46,204,113,0.18);
-    border:1px solid rgba(46,204,113,0.45);
-    color:#b7ffce;
-}
-
-.error{
-    background:rgba(255,0,85,0.14);
-    border:1px solid rgba(255,0,85,0.4);
-    color:#ffd2df;
-}
-
-/* Footer */
-
-.footer{
-    text-align:center;
-    margin-top:25px;
-    color:rgba(255,255,255,0.6);
-    font-size:12px;
-}
-
-/* Responsive */
-
-@media(max-width:500px){
-
-    .card{
-        padding:35px 25px;
-    }
-
-    h1{
-        font-size:26px;
-    }
-
-    .logo{
-        width:75px;
-        height:75px;
-        font-size:32px;
-    }
-
-}
+.success{ color:#7CFFB2; }
+.error{ color:#ff6b81; }
 
 </style>
 </head>
@@ -287,57 +176,32 @@ button:active{
 
 <div class="card">
 
-    <div class="logo">
-        🔒
-    </div>
+    <div class="logo">🔒</div>
 
     <h1>Secure Login</h1>
 
     <div class="subtitle">
-        Firebase Protected Authentication
+        Firebase Protected Vault Access
     </div>
 
-    <div class="input-group">
+    <input type="password" id="passwordInput" placeholder="Enter password">
 
-        <label>
-            Enter Password
-        </label>
-
-        <div class="input-box">
-
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="Enter your secure password"
-            >
-
-        </div>
-
-    </div>
-
-    <button onclick="login()">
-        Access Dashboard
-    </button>
+    <button onclick="login()">Login</button>
 
     <div id="result"></div>
-
-    <div class="footer">
-        Protected by Firebase Security
-    </div>
 
 </div>
 
 <script>
 
-// Firebase URL
+/* 🔥 Firebase URL */
 const FIREBASE_URL =
 "https://c-ph3r-default-rtdb.firebaseio.com/user.json";
 
-// Redirect page
-const REDIRECT_URL =
-"index1.html";
+/* 📌 Vault redirect page */
+const REDIRECT_URL = "index1.html";
 
-// Login Function
+/* 🔐 LOGIN FUNCTION (UNCHANGED LOGIC) */
 async function login(){
 
     const enteredPassword =
@@ -348,68 +212,47 @@ async function login(){
 
     result.style.display = "block";
 
-    // Empty check
     if(!enteredPassword){
-
         result.className = "error";
-
-        result.innerHTML =
-            "❌ Please enter password";
-
+        result.innerHTML = "❌ Please enter password";
         return;
     }
 
     try{
 
-        // Fetch Firebase data
-        const response =
-            await fetch(FIREBASE_URL);
+        const response = await fetch(FIREBASE_URL);
+        const data = await response.json();
 
-        const data =
-            await response.json();
-
-        console.log(data);
-
-        // Get first Firebase key
-        const firstKey =
-            Object.keys(data)[0];
-
-        // Firebase password
-        const firebasePassword =
-            data[firstKey].password;
-
-        // Compare
-        if(enteredPassword === firebasePassword){
-
-            result.className = "success";
-
-            result.innerHTML =
-                "✅ Login Successful! Redirecting...";
-
-            // Redirect
-            setTimeout(()=>{
-
-                window.location.href =
-                    REDIRECT_URL;
-
-            },1500);
-
-        }else{
-
+        if(!data){
             result.className = "error";
-
-            result.innerHTML =
-                "❌ Incorrect Password";
+            result.innerHTML = "⚠️ No user found in Firebase";
+            return;
         }
 
-    }catch(error){
+        const firstKey = Object.keys(data)[0];
+        const firebasePassword = data[firstKey].password;
 
-        console.log(error);
+        if(enteredPassword === firebasePassword){
 
+            /* ✅ CREATE LOGIN SESSION */
+            sessionStorage.setItem("auth","true");
+
+            result.className = "success";
+            result.innerHTML = "✅ Login successful...";
+
+            setTimeout(()=>{
+                window.location.href = REDIRECT_URL;
+            },1200);
+
+        }else{
+            result.className = "error";
+            result.innerHTML = "❌ Wrong password";
+        }
+
+    }catch(err){
+        console.log(err);
         result.className = "error";
-
-        result.innerHTML =
-            "⚠️ Firebase Connection Failed";
+        result.innerHTML = "⚠️ Firebase connection failed";
     }
 }
 
