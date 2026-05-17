@@ -2,371 +2,417 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Password Cipher Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Secure Firebase Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    * {
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:
+    radial-gradient(circle at top left,#6a11cb,#2575fc);
+    position:relative;
+}
+
+/* Animated Background */
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:0.5;
+    animation:float 8s infinite ease-in-out alternate;
+}
+
+body::before{
+    background:#00d2ff;
+    top:-150px;
+    left:-150px;
+}
+
+body::after{
+    background:#ff00cc;
+    bottom:-150px;
+    right:-150px;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(0px) translateX(0px);
+    }
+    to{
+        transform:translateY(40px) translateX(20px);
+    }
+}
+
+/* Login Card */
+
+.card{
+    width:90%;
+    max-width:430px;
+    padding:40px 35px;
+    border-radius:28px;
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.25);
+
+    position:relative;
+    z-index:10;
+
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0px);
+    }
+}
+
+.logo{
+    width:85px;
+    height:85px;
+    margin:auto;
+    margin-bottom:20px;
+
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:38px;
+    color:white;
+
+    box-shadow:
+    0 10px 30px rgba(0,114,255,0.5);
+}
+
+h1{
+    color:white;
+    text-align:center;
+    font-size:30px;
+    margin-bottom:8px;
+    font-weight:700;
+}
+
+.subtitle{
+    text-align:center;
+    color:rgba(255,255,255,0.75);
+    margin-bottom:35px;
+    font-size:14px;
+}
+
+/* Inputs */
+
+.input-group{
+    margin-bottom:22px;
+}
+
+label{
+    display:block;
+    color:white;
+    margin-bottom:10px;
+    font-size:14px;
+    font-weight:500;
+}
+
+.input-box{
+    position:relative;
+}
+
+input{
+    width:100%;
+    padding:16px 18px;
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:white;
+    font-size:15px;
+
+    border:1px solid rgba(255,255,255,0.18);
+
+    transition:0.3s;
+}
+
+input::placeholder{
+    color:rgba(255,255,255,0.55);
+}
+
+input:focus{
+    border-color:#00d2ff;
+    box-shadow:
+    0 0 20px rgba(0,210,255,0.35);
+}
+
+/* Button */
+
+button{
+    width:100%;
+    padding:16px;
+
+    border:none;
+    border-radius:14px;
+
+    background:
+    linear-gradient(135deg,#00d2ff,#0072ff);
+
+    color:white;
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:0.35s;
+
+    box-shadow:
+    0 8px 25px rgba(0,114,255,0.4);
+}
+
+button:hover{
+    transform:translateY(-2px) scale(1.01);
+
+    box-shadow:
+    0 15px 35px rgba(0,114,255,0.55);
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+/* Result */
+
+#result{
+    margin-top:22px;
+    padding:16px;
+    border-radius:14px;
+
+    text-align:center;
+    font-weight:600;
+    display:none;
+
+    animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+    from{
+        transform:scale(0.8);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.success{
+    background:rgba(46,204,113,0.18);
+    border:1px solid rgba(46,204,113,0.45);
+    color:#b7ffce;
+}
+
+.error{
+    background:rgba(255,0,85,0.14);
+    border:1px solid rgba(255,0,85,0.4);
+    color:#ffd2df;
+}
+
+/* Footer */
+
+.footer{
+    text-align:center;
+    margin-top:25px;
+    color:rgba(255,255,255,0.6);
+    font-size:12px;
+}
+
+/* Responsive */
+
+@media(max-width:500px){
+
+    .card{
+        padding:35px 25px;
     }
 
-    body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #333;
+    h1{
+        font-size:26px;
     }
 
-    .container {
-        background: #fff;
-        width: 90%;
-        max-width: 700px;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    .logo{
+        width:75px;
+        height:75px;
+        font-size:32px;
     }
 
-    h1 {
-        text-align: center;
-        color: #1e3c72;
-        margin-bottom: 25px;
-    }
+}
 
-    .section {
-        margin-bottom: 25px;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
-        background: #f9f9f9;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-    }
-
-    input[type="password"],
-    input[type="text"],
-    textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 14px;
-        margin-bottom: 12px;
-    }
-
-    textarea {
-        min-height: 120px;
-        resize: vertical;
-        font-family: Consolas, monospace;
-    }
-
-    .btn-group {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    button {
-        background: #1e3c72;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-    button:hover {
-        background: #16305c;
-    }
-
-    .secondary {
-        background: #28a745;
-    }
-
-    .secondary:hover {
-        background: #1f7d35;
-    }
-
-    .danger {
-        background: #dc3545;
-    }
-
-    .danger:hover {
-        background: #b52a37;
-    }
-
-    .info {
-        background: #17a2b8;
-    }
-
-    .info:hover {
-        background: #117a8b;
-    }
-
-    .output {
-        background: #eef5ff;
-        border: 1px solid #c9ddff;
-    }
-
-    .note {
-        font-size: 13px;
-        color: #666;
-        margin-top: 8px;
-    }
-
-    .success {
-        color: green;
-        font-weight: bold;
-        margin-top: 10px;
-    }
 </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>🔐 Password Cipher Tool</h1>
+<div class="card">
 
-    <!-- Encrypt Section -->
-    <div class="section">
-        <h2>Encrypt Password</h2>
-
-        <label for="passwordInput">Enter Password</label>
-        <input type="password" id="passwordInput" placeholder="Enter password to encrypt" />
-
-        <div class="btn-group">
-            <button onclick="encryptPassword()">Encrypt</button>
-            <button class="secondary" onclick="downloadEncrypted()">Export to TXT</button>
-            <button class="danger" onclick="clearAll()">Clear</button>
-        </div>
-
-        <label for="encryptedOutput" style="margin-top:15px;">Encrypted Output</label>
-        <textarea id="encryptedOutput" class="output" readonly></textarea>
-        <div class="note">
-            Encryption uses AES-GCM with PBKDF2 key derivation and a user-provided password.
-        </div>
+    <div class="logo">
+        🔒
     </div>
 
-    <!-- Decrypt Section -->
-    <div class="section">
-        <h2>Import and Decrypt</h2>
+    <h1>Secure Login</h1>
 
-        <label for="fileInput">Import Encrypted TXT File</label>
-        <input type="file" id="fileInput" accept=".txt" />
+    <div class="subtitle">
+        Firebase Protected Authentication
+    </div>
 
-        <label for="masterKeyInput">Enter Master Key</label>
-        <input type="password" id="masterKeyInput" placeholder="Enter the same key used for encryption" />
+    <div class="input-group">
 
-        <div class="btn-group">
-            <button class="info" onclick="decryptImported()">Decrypt</button>
+        <label>
+            Enter Password
+        </label>
+
+        <div class="input-box">
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Enter your secure password"
+            >
+
         </div>
 
-        <label for="decryptedOutput" style="margin-top:15px;">Decrypted Password</label>
-        <input type="text" id="decryptedOutput" readonly />
     </div>
+
+    <button onclick="login()">
+        Access Dashboard
+    </button>
+
+    <div id="result"></div>
+
+    <div class="footer">
+        Protected by Firebase Security
+    </div>
+
 </div>
 
 <script>
-let encryptedText = "";
 
-/*
-  File format (JSON):
-  {
-    "salt": "...base64...",
-    "iv": "...base64...",
-    "data": "...base64..."
-  }
+// Firebase URL
+const FIREBASE_URL =
+"https://c-ph3r-default-rtdb.firebaseio.com/user.json";
 
-  The user enters:
-  - Password to protect
-  - Master Key (prompted during encryption)
+// Redirect page
+const REDIRECT_URL =
+"index1.html";
 
-  The same Master Key is required for decryption.
-*/
+// Login Function
+async function login(){
 
-// ---------- Utility Functions ----------
-function arrayBufferToBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = "";
-    for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-}
+    const enteredPassword =
+        document.getElementById("passwordInput").value;
 
-function base64ToArrayBuffer(base64) {
-    const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes.buffer;
-}
+    const result =
+        document.getElementById("result");
 
-async function deriveKey(masterKey, salt) {
-    const encoder = new TextEncoder();
+    result.style.display = "block";
 
-    const keyMaterial = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(masterKey),
-        "PBKDF2",
-        false,
-        ["deriveKey"]
-    );
+    // Empty check
+    if(!enteredPassword){
 
-    return crypto.subtle.deriveKey(
-        {
-            name: "PBKDF2",
-            salt: salt,
-            iterations: 100000,
-            hash: "SHA-256"
-        },
-        keyMaterial,
-        {
-            name: "AES-GCM",
-            length: 256
-        },
-        false,
-        ["encrypt", "decrypt"]
-    );
-}
+        result.className = "error";
 
-// ---------- Encrypt ----------
-async function encryptPassword() {
-    const password = document.getElementById("passwordInput").value;
+        result.innerHTML =
+            "❌ Please enter password";
 
-    if (!password) {
-        alert("Please enter a password to encrypt.");
         return;
     }
 
-    const masterKey = prompt("Enter a master key to protect this password:");
+    try{
 
-    if (!masterKey) {
-        alert("Master key is required.");
-        return;
-    }
+        // Fetch Firebase data
+        const response =
+            await fetch(FIREBASE_URL);
 
-    try {
-        const encoder = new TextEncoder();
+        const data =
+            await response.json();
 
-        const salt = crypto.getRandomValues(new Uint8Array(16));
-        const iv = crypto.getRandomValues(new Uint8Array(12));
+        console.log(data);
 
-        const key = await deriveKey(masterKey, salt);
+        // Get first Firebase key
+        const firstKey =
+            Object.keys(data)[0];
 
-        const encrypted = await crypto.subtle.encrypt(
-            {
-                name: "AES-GCM",
-                iv: iv
-            },
-            key,
-            encoder.encode(password)
-        );
+        // Firebase password
+        const firebasePassword =
+            data[firstKey].password;
 
-        const payload = {
-            salt: arrayBufferToBase64(salt),
-            iv: arrayBufferToBase64(iv),
-            data: arrayBufferToBase64(encrypted)
-        };
+        // Compare
+        if(enteredPassword === firebasePassword){
 
-        encryptedText = JSON.stringify(payload, null, 2);
+            result.className = "success";
 
-        document.getElementById("encryptedOutput").value = encryptedText;
-    } catch (error) {
-        alert("Encryption failed: " + error.message);
-    }
-}
+            result.innerHTML =
+                "✅ Login Successful! Redirecting...";
 
-// ---------- Download TXT ----------
-function downloadEncrypted() {
-    if (!encryptedText) {
-        alert("Please encrypt a password first.");
-        return;
-    }
+            // Redirect
+            setTimeout(()=>{
 
-    const blob = new Blob([encryptedText], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+                window.location.href =
+                    REDIRECT_URL;
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "encrypted_password.txt";
-    a.click();
+            },1500);
 
-    URL.revokeObjectURL(url);
-}
+        }else{
 
-// ---------- Read File ----------
-function readFileAsText(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = () => reject(new Error("Failed to read file."));
-        reader.readAsText(file);
-    });
-}
+            result.className = "error";
 
-// ---------- Decrypt ----------
-async function decryptImported() {
-    const fileInput = document.getElementById("fileInput");
-    const masterKey = document.getElementById("masterKeyInput").value;
+            result.innerHTML =
+                "❌ Incorrect Password";
+        }
 
-    if (!fileInput.files.length) {
-        alert("Please select a TXT file.");
-        return;
-    }
+    }catch(error){
 
-    if (!masterKey) {
-        alert("Please enter the master key.");
-        return;
-    }
+        console.log(error);
 
-    try {
-        const fileContent = await readFileAsText(fileInput.files[0]);
-        const payload = JSON.parse(fileContent);
+        result.className = "error";
 
-        const salt = new Uint8Array(base64ToArrayBuffer(payload.salt));
-        const iv = new Uint8Array(base64ToArrayBuffer(payload.iv));
-        const encryptedData = base64ToArrayBuffer(payload.data);
-
-        const key = await deriveKey(masterKey, salt);
-
-        const decrypted = await crypto.subtle.decrypt(
-            {
-                name: "AES-GCM",
-                iv: iv
-            },
-            key,
-            encryptedData
-        );
-
-        const decoder = new TextDecoder();
-        const originalPassword = decoder.decode(decrypted);
-
-        document.getElementById("decryptedOutput").value = originalPassword;
-    } catch (error) {
-        alert("Decryption failed. Check that the file and master key are correct.");
+        result.innerHTML =
+            "⚠️ Firebase Connection Failed";
     }
 }
 
-// ---------- Clear ----------
-function clearAll() {
-    document.getElementById("passwordInput").value = "";
-    document.getElementById("encryptedOutput").value = "";
-    document.getElementById("fileInput").value = "";
-    document.getElementById("masterKeyInput").value = "";
-    document.getElementById("decryptedOutput").value = "";
-    encryptedText = "";
-}
 </script>
 
 </body>
