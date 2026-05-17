@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Firebase Password Vault</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+
+    background:
+    radial-gradient(circle at top left,#6a11cb,#2575fc);
+
+    overflow-x:hidden;
+    position:relative;
+}
+
+/* Background Glow */
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:0.45;
+    animation:float 8s infinite alternate ease-in-out;
+}
+
+body::before{
+    background:#00d2ff;
+    top:-150px;
+    left:-150px;
+}
+
+body::after{
+    background:#ff00cc;
+    bottom:-150px;
+    right:-150px;
+}
+
+@keyframes float{
+    from{
+        transform:translate(0,0);
+    }
+    to{
+        transform:translate(40px,40px);
+    }
+}
+
+/* Container */
+
+.container{
+
+    width:100%;
+    max-width:900px;
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    border-radius:30px;
+
+    padding:35px;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,0.3);
+
+    position:relative;
+    z-index:10;
+}
+
+h1{
+    text-align:center;
+    color:white;
+    margin-bottom:35px;
+    font-size:38px;
+}
+
+/* Sections */
+
+.section{
+
+    background:rgba(255,255,255,0.08);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    border-radius:24px;
+
+    padding:28px;
+
+    margin-bottom:30px;
+}
+
+/* Inputs */
+
+label{
+    display:block;
+    margin-bottom:10px;
+    color:white;
+    font-size:14px;
+    font-weight:500;
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:white;
+
+    font-size:15px;
+
+    border:1px solid rgba(255,255,255,0.18);
+
+    margin-bottom:18px;
+
+    transition:0.3s;
+}
+
+textarea{
+    min-height:180px;
+    resize:vertical;
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:rgba(255,255,255,0.55);
+}
+
+input:focus,
+textarea:focus{
+    border-color:#00d2ff;
+
+    box-shadow:
+    0 0 20px rgba(0,210,255,0.35);
+}
+
+/* Buttons */
+
+.btn-group{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+button{
+
+    flex:1;
+
+    min-width:150px;
+
+    padding:15px;
+
+    border:none;
+    border-radius:14px;
+
+    color:white;
+    font-size:15px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.35s;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.25);
+}
+
+button:hover{
+    transform:translateY(-2px) scale(1.02);
+}
+
+.primary{
+    background:
+    linear-gradient(135deg,#00d2ff,#0072ff);
+}
+
+.success{
+    background:
+    linear-gradient(135deg,#28a745,#20c997);
+}
+
+.info{
+    background:
+    linear-gradient(135deg,#17a2b8,#007bff);
+}
+
+.danger{
+    background:
+    linear-gradient(135deg,#ff416c,#ff4b2b);
+}
+
+/* Output */
+
+.output{
+    background:rgba(255,255,255,0.08);
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .btn-group{
+        flex-direction:column;
+    }
+
+    h1{
+        font-size:30px;
+    }
+
+    .container{
+        padding:25px;
+    }
+}
+
+@media(max-width:500px){
+
+    body{
+        padding:15px;
+    }
+
+    h1{
+        font-size:26px;
+    }
+
+    .section{
+        padding:18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🔐 Firebase Password Vault</h1>
+
+    <!-- SAVE SECTION -->
+
+    <div class="section">
+
+        <h2 style="color:white;margin-bottom:20px;">
+            Save Encrypted Password
+        </h2>
+
+        <label>
+            Enter Username
+        </label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+        >
+
+        <label>
+            Enter Password
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+        >
+
+        <label>
+            Master Key
+        </label>
+
+        <input
+            type="password"
+            id="masterKey"
+            placeholder="Enter master key"
+        >
+
+        <div class="btn-group">
+
+            <button
+                class="primary"
+                onclick="saveEncrypted()"
+            >
+                Encrypt & Save
+            </button>
+
+            <button
+                class="danger"
+                onclick="clearAll()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- FETCH SECTION -->
+
+    <div class="section">
+
+        <h2 style="color:white;margin-bottom:20px;">
+            Load & Decrypt Password
+        </h2>
+
+        <label>
+            Enter Username
+        </label>
+
+        <input
+            type="text"
+            id="searchUser"
+            placeholder="Enter username"
+        >
+
+        <label>
+            Master Key
+        </label>
+
+        <input
+            type="password"
+            id="decryptKey"
+            placeholder="Enter master key"
+        >
+
+        <div class="btn-group">
+
+            <button
+                class="info"
+                onclick="loadAndDecrypt()"
+            >
+                Load & Decrypt
+            </button>
+
+        </div>
+
+        <label style="margin-top:25px;">
+            Decrypted Password
+        </label>
+
+        <textarea
+            id="result"
+            class="output"
+            readonly
+        ></textarea>
+
+    </div>
+
+</div>
+
+<script>
+
+// Firebase URL
+const FIREBASE_URL =
+"https://c-ph3r-default-rtdb.firebaseio.com/users.json";
+
+/* ---------- Utilities ---------- */
+
+function arrayBufferToBase64(buffer){
+
+    const bytes = new Uint8Array(buffer);
+
+    let binary = "";
+
+    for(let i=0;i<bytes.byteLength;i++){
+
+        binary += String.fromCharCode(bytes[i]);
+    }
+
+    return btoa(binary);
+}
+
+function base64ToArrayBuffer(base64){
+
+    const binary = atob(base64);
+
+    const bytes = new Uint8Array(binary.length);
+
+    for(let i=0;i<binary.length;i++){
+
+        bytes[i] = binary.charCodeAt(i);
+    }
+
+    return bytes.buffer;
+}
+
+async function deriveKey(masterKey,salt){
+
+    const encoder = new TextEncoder();
+
+    const keyMaterial =
+        await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(masterKey),
+            "PBKDF2",
+            false,
+            ["deriveKey"]
+        );
+
+    return crypto.subtle.deriveKey(
+        {
+            name:"PBKDF2",
+            salt:salt,
+            iterations:100000,
+            hash:"SHA-256"
+        },
+        keyMaterial,
+        {
+            name:"AES-GCM",
+            length:256
+        },
+        false,
+        ["encrypt","decrypt"]
+    );
+}
+
+/* ---------- SAVE ENCRYPTED ---------- */
+
+async function saveEncrypted(){
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const masterKey =
+        document.getElementById("masterKey").value;
+
+    if(!username || !password || !masterKey){
+
+        alert("Fill all fields.");
+        return;
+    }
+
+    try{
+
+        const encoder = new TextEncoder();
+
+        const salt =
+            crypto.getRandomValues(
+                new Uint8Array(16)
+            );
+
+        const iv =
+            crypto.getRandomValues(
+                new Uint8Array(12)
+            );
+
+        const key =
+            await deriveKey(masterKey,salt);
+
+        const encrypted =
+            await crypto.subtle.encrypt(
+                {
+                    name:"AES-GCM",
+                    iv:iv
+                },
+                key,
+                encoder.encode(password)
+            );
+
+        const payload = {
+
+            username:username,
+
+            salt:
+            arrayBufferToBase64(salt),
+
+            iv:
+            arrayBufferToBase64(iv),
+
+            data:
+            arrayBufferToBase64(encrypted)
+        };
+
+        // Save to Firebase
+
+        await fetch(FIREBASE_URL,{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(payload)
+        });
+
+        alert("✅ Encrypted password saved to Firebase!");
+
+    }catch(error){
+
+        console.log(error);
+
+        alert("❌ Error saving data.");
+    }
+}
+
+/* ---------- LOAD & DECRYPT ---------- */
+
+async function loadAndDecrypt(){
+
+    const searchUser =
+        document.getElementById("searchUser").value;
+
+    const masterKey =
+        document.getElementById("decryptKey").value;
+
+    if(!searchUser || !masterKey){
+
+        alert("Fill all fields.");
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(FIREBASE_URL);
+
+        const data =
+            await response.json();
+
+        let foundUser = null;
+
+        // Find user
+
+        for(const key in data){
+
+            if(data[key].username === searchUser){
+
+                foundUser = data[key];
+                break;
+            }
+        }
+
+        if(!foundUser){
+
+            alert("❌ User not found.");
+            return;
+        }
+
+        // Convert values
+
+        const salt =
+            new Uint8Array(
+                base64ToArrayBuffer(
+                    foundUser.salt
+                )
+            );
+
+        const iv =
+            new Uint8Array(
+                base64ToArrayBuffer(
+                    foundUser.iv
+                )
+            );
+
+        const encryptedData =
+            base64ToArrayBuffer(
+                foundUser.data
+            );
+
+        // Derive key
+
+        const key =
+            await deriveKey(masterKey,salt);
+
+        // Decrypt
+
+        const decrypted =
+            await crypto.subtle.decrypt(
+                {
+                    name:"AES-GCM",
+                    iv:iv
+                },
+                key,
+                encryptedData
+            );
+
+        const decoder =
+            new TextDecoder();
+
+        const originalPassword =
+            decoder.decode(decrypted);
+
+        document.getElementById("result").value =
+            originalPassword;
+
+    }catch(error){
+
+        console.log(error);
+
+        alert(
+            "❌ Wrong master key or decrypt failed."
+        );
+    }
+}
+
+/* ---------- CLEAR ---------- */
+
+function clearAll(){
+
+    document.getElementById("username").value = "";
+
+    document.getElementById("password").value = "";
+
+    document.getElementById("masterKey").value = "";
+
+    document.getElementById("searchUser").value = "";
+
+    document.getElementById("decryptKey").value = "";
+
+    document.getElementById("result").value = "";
+}
+
+</script>
+
+</body>
+</html>
